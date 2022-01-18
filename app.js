@@ -1,13 +1,13 @@
 const qwerty = document.getElementById('qwerty');
 const phrase = document.getElementById('phrase');
-const missed = 0;
+let missed = 0;
 
 const startButton = document.getElementsByClassName('btn__reset');
 startButton[0].addEventListener('click', (e) => {
     document.getElementById('overlay').className = "hidden";
 });
 
-const phrases = ['Kitties', 'Doggos', 'Birbs', 'Fishies', 'Tigers'];
+const phrases = ['Kitties', 'Doggos', 'Birbs', 'Fishy babies', 'Tigers'];
 
 function getRandomPhraseAsArray(arr){
     const randomNumber = Math.floor( Math.random() * 5);
@@ -36,13 +36,14 @@ addPhraseToDisplay(phraseArray);
 
 
 function checkLetter(button) {
+    const phraseLiArray = document.getElementsByClassName('letter');
     let matchFound = null;
 
-    for (const letter of phraseArray) {
-        if (button.text == letter) {
+    for (const letterLi of phraseLiArray) {
+
+        if (button.innerHTML.toLowerCase() == letterLi.innerHTML.toLowerCase()) {
+            letterLi.className += " show";
             matchFound = true;
-        } else {
-            matchFound = false;
         }
     }
 
@@ -50,10 +51,33 @@ function checkLetter(button) {
     return matchFound;
 }
 
+function checkWin() {
+    const hiddenLetters = document.getElementsByClassName('letter');
+    const shownLetters = document.getElementsByClassName('show');
+
+        if (hiddenLetters.length == shownLetters.length){
+            document.getElementById('overlay').className = "win";
+            document.getElementsByClassName('title')[0].innerHTML = "You won, dawg!";
+        } 
+        if (missed >= 5) {
+            document.getElementById('overlay').className = "lose";
+            document.getElementsByClassName('title')[0].innerHTML = "Shucks man, try again!";
+        }
+
+}
+
+
 qwerty.addEventListener('click', (e) => {
     if (e.target.className !== 'chosen' && e.target.tagName === 'BUTTON') {
-        // console.log(e);
-        // const letterFound = checkLetter(e.target);
+        e.target.classList.add('chosen');
+        const letterFound = checkLetter(e.target);
+        if (letterFound == null) {
+            document.getElementsByClassName('tries')[missed].getElementsByTagName('img')[0].src="images/lostHeart.png";
+            missed++;
+        }
+        checkWin();
     }
 });
+
+
 
