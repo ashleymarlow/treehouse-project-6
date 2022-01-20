@@ -23,6 +23,8 @@ function addPhraseToDisplay(arr) {
 
         if (character != " ") {
             li.className = "letter";
+        } else {
+            li.className = "space";
         }
 
         const phraseUl = document.getElementById('phrase').getElementsByTagName('ul')[0];
